@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import {
   Box,
@@ -21,10 +20,10 @@ const DocumentList = ({ caseId }) => {
 
   const loadDocuments = async () => {
     try {
-      const response = await api.get(`/documents/case/${caseId}`);
-      setDocuments(response.data);
-    } catch (error) {
-      console.error('Erro ao carregar documentos:', error);
+      const { data } = await api.get(`/documents/case/${caseId}`);
+      setDocuments(data);
+    } catch (err) {
+      console.error('Erro ao carregar documentos:', err);
     }
   };
 
@@ -36,19 +35,18 @@ const DocumentList = ({ caseId }) => {
       'image/jpeg': ['.jpg', '.jpeg'],
       'image/png': ['.png'],
     },
-    onDrop: async (acceptedFiles) => {
-      for (const file of acceptedFiles) {
+    onDrop: async (files) => {
+      for (const file of files) {
         const formData = new FormData();
         formData.append('file', file);
+
         try {
           await api.post(`/documents/case/${caseId}`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
+            headers: { 'Content-Type': 'multipart/form-data' },
           });
           loadDocuments();
-        } catch (error) {
-          console.error('Erro ao fazer upload:', error);
+        } catch (err) {
+          console.error('Erro no upload:', err);
         }
       }
     },
@@ -60,6 +58,8 @@ const DocumentList = ({ caseId }) => {
 
   return (
     <Box>
+
+      {/* Área de upload */}
       <Box
         {...getRootProps()}
         sx={{
@@ -69,39 +69,41 @@ const DocumentList = ({ caseId }) => {
           textAlign: 'center',
           cursor: 'pointer',
           mb: 3,
-          '&:hover': {
-            borderColor: 'primary.main',
-          },
+          '&:hover': { borderColor: 'primary.main' },
         }}
       >
         <input {...getInputProps()} />
         <CloudUpload sx={{ fontSize: 48, color: 'text.secondary', mb: 1 }} />
-        <Typography>Clique ou arraste arquivos para fazer upload</Typography>
+        <Typography>Clique ou arraste arquivos para enviar</Typography>
       </Box>
 
+      {/* Lista de Documentos */}
       <List>
-        {documents.map((doc) => (
-          <ListItem
-            key={doc.id}
-            secondaryAction={
-              <Button
-                startIcon={<Download />}
-                onClick={() => handleDownload(doc.filePath)}
-              >
-                Download
-              </Button>
-            }
-          >
-            <ListItemText
-              primary={doc.fileName}
-              secondary={`${doc.fileType} - ${(doc.fileSize / 1024).toFixed(2)} KB - Enviado por ${doc.uploadedByName}`}
-            />
-          </ListItem>
-        ))}
+        {documents.map((doc) => {
+          const sizeKB = (doc.fileSize / 1024).toFixed(2);
+
+          return (
+            <ListItem
+              key={doc.id}
+              secondaryAction={
+                <Button
+                  startIcon={<Download />}
+                  onClick={() => handleDownload(doc.filePath)}
+                >
+                  Download
+                </Button>
+              }
+            >
+              <ListItemText
+                primary={doc.fileName}
+                secondary={`${doc.fileType} • ${sizeKB} KB • Enviado por ${doc.uploadedByName}`}
+              />
+            </ListItem>
+          );
+        })}
       </List>
     </Box>
   );
 };
 
 export default DocumentList;
-

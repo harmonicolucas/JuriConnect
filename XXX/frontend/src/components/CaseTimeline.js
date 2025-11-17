@@ -29,32 +29,36 @@ const STATUS_LABELS = {
   JULGAMENTO_REALIZADO: 'Julgamento Realizado',
   SENTENCA_PROFERIDA: 'Sentença Proferida',
   ACORDO_EXTRAJUDICIAL: 'Acordo Extrajudicial',
-  EXECUCAO_SENTENCA: 'Execução de Sentença',
+  EXECUCAO_SENTENCA: 'Execução da Sentença',
   ENCERRADO: 'Encerrado',
 };
 
 const CaseTimeline = ({ caseData }) => {
-  const currentStatusIndex = CASE_STATUSES.indexOf(caseData.status);
+  const currentIndex = CASE_STATUSES.indexOf(caseData.status);
 
   return (
     <Box>
-      <Typography variant="h6" gutterBottom>
-        Acompanhamento do Processo
-      </Typography>
+      <Typography variant="h6">Acompanhamento do Processo</Typography>
+
       <Paper elevation={2} sx={{ p: 3, mt: 2 }}>
-        <Stepper activeStep={currentStatusIndex} orientation="vertical">
-          {CASE_STATUSES.map((status, index) => (
-            <Step key={status} completed={index <= currentStatusIndex}>
-              <StepLabel>{STATUS_LABELS[status]}</StepLabel>
-              {index === currentStatusIndex && (
-                <StepContent>
-                  <Typography variant="body2" color="text.secondary">
-                    Status atual do processo
-                  </Typography>
-                </StepContent>
-              )}
-            </Step>
-          ))}
+        <Stepper activeStep={currentIndex} orientation="vertical">
+          {CASE_STATUSES.map((status, idx) => {
+            const isActive = idx === currentIndex;
+
+            return (
+              <Step key={status} completed={idx <= currentIndex}>
+                <StepLabel>{STATUS_LABELS[status]}</StepLabel>
+
+                {isActive && (
+                  <StepContent>
+                    <Typography variant="body2" color="text.secondary">
+                      Status atual do processo.
+                    </Typography>
+                  </StepContent>
+                )}
+              </Step>
+            );
+          })}
         </Stepper>
       </Paper>
     </Box>
@@ -62,4 +66,3 @@ const CaseTimeline = ({ caseData }) => {
 };
 
 export default CaseTimeline;
-
