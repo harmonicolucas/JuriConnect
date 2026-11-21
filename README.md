@@ -65,7 +65,7 @@ CREATE DATABASE juriconnect;
 
 ### 3. Configuração do Backend
 
-Edite o arquivo `backend/src/main/resources/application.properties` com suas credenciais:
+Edite o arquivo `XXX/backend/src/main/resources/application.properties` com suas credenciais:
 
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/juriconnect
@@ -76,7 +76,7 @@ spring.datasource.password=sua_senha
 ### 4. Executar o Backend
 
 ```bash
-cd backend
+cd XXX/backend
 mvn clean install
 mvn spring-boot:run
 ```
@@ -86,7 +86,7 @@ O backend estará disponível em `http://localhost:8080`
 ### 5. Executar o Frontend
 
 ```bash
-cd frontend
+cd XXX/frontend
 npm install
 npm start
 ```
@@ -97,7 +97,7 @@ O frontend estará disponível em `http://localhost:3000`
 
 ```
 juriconnect/
-├── backend/
+├── XXX/backend/
 │   ├── src/
 │   │   ├── main/
 │   │   │   ├── java/com/juriconnect/
@@ -111,7 +111,7 @@ juriconnect/
 │   │   │   └── resources/
 │   │   │       └── application.properties
 │   └── pom.xml
-├── frontend/
+├── XXX/frontend/
 │   ├── src/
 │   │   ├── pages/                   # Páginas principais
 │   │   ├── components/               # Componentes reutilizáveis
@@ -167,8 +167,11 @@ juriconnect/
 - `GET /api/lawyers/{id}` - Detalhes do advogado
 
 ### Mensagens
-- `POST /api/messages/case/{caseId}` - Enviar mensagem
+- `POST /api/messages/case/{caseId}` - Enviar mensagem. O corpo é texto simples, não JSON.
 - `GET /api/messages/case/{caseId}` - Listar mensagens
+
+### Público
+- `GET /api/public/stats` - Totais de advogados e clientes, e a taxa de satisfação
 
 ### Documentos
 - `POST /api/documents/case/{caseId}` - Upload de documento
@@ -179,7 +182,7 @@ juriconnect/
 Para executar os testes do backend:
 
 ```bash
-cd backend
+cd XXX/backend
 mvn test
 ```
 
